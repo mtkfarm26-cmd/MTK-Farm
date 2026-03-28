@@ -1084,7 +1084,7 @@
 
         <div class="pcard reveal" style="transition-delay:0.12s">
           <div class="pcard-img-wrap">
-            <img src="https://placehold.co/480x360/3D6B2C/F8F2E4?text=Baby+Chicks" alt="Baby Chicks" loading="lazy" />
+            <img src="Brand_assets/IMG_1432.jpeg" alt="Baby Chicks — MTK Farm" loading="lazy" />
             <div class="pcard-img-overlay"></div>
             <span class="pcard-badge">Available Now</span>
           </div>
@@ -1210,31 +1210,33 @@
 
         <div class="contact-form reveal" style="transition-delay:0.15s">
           <p class="form-title">Place an Order</p>
-          <form onsubmit="handleSubmit(event)">
+          <form onsubmit="handleSubmit(event)" id="orderForm">
             <input type="hidden" name="access_key" value="47a3b1bd-8a74-48e2-9928-4f8241464da3" />
-            <input type="hidden" name="subject" value="New Order Inquiry — MTK Farm" />
+            <input type="hidden" name="subject" id="emailSubject" value="New Order Inquiry — MTK Farm" />
             <input type="hidden" name="from_name" value="MTK Farm Website" />
+            <!-- Honeypot spam filter -->
+            <input type="checkbox" name="botcheck" style="display:none;" tabindex="-1" autocomplete="off" />
             <div class="form-row">
               <div class="form-group">
                 <label for="fname">First Name</label>
-                <input type="text" id="fname" name="fname" placeholder="Maria" autocomplete="given-name" />
+                <input type="text" id="fname" name="First Name" placeholder="Maria" autocomplete="given-name" />
               </div>
               <div class="form-group">
                 <label for="lname">Last Name</label>
-                <input type="text" id="lname" name="lname" placeholder="Santos" autocomplete="family-name" />
+                <input type="text" id="lname" name="Last Name" placeholder="Santos" autocomplete="family-name" />
               </div>
             </div>
             <div class="form-group">
               <label for="email">Email Address</label>
-              <input type="email" id="email" name="email" placeholder="you@example.com" autocomplete="email" />
+              <input type="email" id="email" name="Email Address" placeholder="you@example.com" autocomplete="email" />
             </div>
             <div class="form-group">
               <label for="phone">Phone Number</label>
-              <input type="tel" id="phone" name="phone" placeholder="(832) 555-0100" autocomplete="tel" />
+              <input type="tel" id="phone" name="Phone Number" placeholder="(832) 555-0100" autocomplete="tel" />
             </div>
             <div class="form-group">
               <label for="product">Product Interest</label>
-              <select id="product" name="product">
+              <select id="product" name="Product Interest">
                 <option value="">Select a product…</option>
                 <option>Chicken Balut — By the Egg</option>
                 <option>Chicken Balut — By the Dozen</option>
@@ -1245,7 +1247,7 @@
             </div>
             <div class="form-group">
               <label for="message">Message / Notes</label>
-              <textarea id="message" name="message" placeholder="Tell us about your order — quantity, preferred pickup date, any questions…"></textarea>
+              <textarea id="message" name="Message" placeholder="Tell us about your order — quantity, preferred pickup date, any questions…"></textarea>
             </div>
             <button type="submit" class="btn-submit">Send Inquiry</button>
           </form>
@@ -1358,6 +1360,13 @@
       const btn = e.target.querySelector('.btn-submit');
       btn.textContent = 'Sending…';
       btn.disabled = true;
+
+      // Build dynamic subject: "New Order — First Last | Product"
+      const firstName = document.getElementById('fname').value.trim();
+      const lastName  = document.getElementById('lname').value.trim();
+      const product   = document.getElementById('product').value || 'General Inquiry';
+      const fullName  = [firstName, lastName].filter(Boolean).join(' ') || 'Unknown';
+      document.getElementById('emailSubject').value = `New Order — ${fullName} | ${product}`;
 
       const data = new FormData(e.target);
 
